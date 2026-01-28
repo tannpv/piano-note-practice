@@ -3,14 +3,22 @@ import 'package:flutter/material.dart';
 import '../models/music_note.dart';
 
 class PianoKeyboard extends StatelessWidget {
-  const PianoKeyboard({super.key, required this.currentNote});
+  const PianoKeyboard({
+    super.key,
+    required this.currentNote,
+    this.showFingerHints = true,
+  });
 
   final MusicNote? currentNote;
+  final bool showFingerHints;
 
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
-      painter: _KeyboardPainter(currentNote: currentNote),
+      painter: _KeyboardPainter(
+        currentNote: currentNote,
+        showFingerHints: showFingerHints,
+      ),
     );
   }
 }
@@ -31,9 +39,10 @@ class MiniSurroundKeyboard extends StatelessWidget {
 }
 
 class _KeyboardPainter extends CustomPainter {
-  _KeyboardPainter({required this.currentNote});
+  _KeyboardPainter({required this.currentNote, required this.showFingerHints});
 
   final MusicNote? currentNote;
+  final bool showFingerHints;
 
   static const _whitePattern = [0, 2, 4, 5, 7, 9, 11];
   static const _blackPattern = [1, 3, 6, 8, 10];
@@ -104,6 +113,8 @@ class _KeyboardPainter extends CustomPainter {
     }
 
     // Draw white keys
+    double? fingerX;
+    double fingerY = 2;
     for (int i = 0; i < whiteKeys.length; i++) {
       final x = i * whiteWidth;
       final isActive = noteMidi != null && whiteKeys[i] == noteMidi;
@@ -155,6 +166,11 @@ class _KeyboardPainter extends CustomPainter {
         canvas,
         Offset(x + (whiteWidth - tp.width) / 2, whiteHeight - tp.height - 6),
       );
+
+      if (isActive && showFingerHints) {
+        fingerX = x + whiteWidth / 2;
+        fingerY = 2;
+      }
     }
 
     // Black keys
@@ -188,7 +204,33 @@ class _KeyboardPainter extends CustomPainter {
           canvas,
           Offset(x + (blackWidth - tp.width) / 2, blackHeight - tp.height - 3),
         );
+
+        if (isActive && showFingerHints) {
+          fingerX = x + blackWidth / 2;
+        }
       }
+    }
+
+    if (showFingerHints && fingerX != null) {
+      final info = _fingerInfo(noteMidi ?? 60);
+      final pillWidth = whiteWidth * 0.9;
+      final pillHeight = 16.0;
+      final rect = Rect.fromCenter(
+        center: Offset(fingerX, fingerY + pillHeight / 2),
+        width: pillWidth,
+        height: pillHeight,
+      );
+      final rrect = RRect.fromRectAndRadius(rect, const Radius.circular(8));
+      final pillPaint = Paint()..color = info.color.withValues(alpha: 0.9);
+      canvas.drawRRect(rrect, pillPaint);
+      final tp = TextPainter(
+        text: TextSpan(
+          text: info.label,
+          style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.w600),
+        ),
+        textDirection: TextDirection.ltr,
+      )..layout(maxWidth: pillWidth);
+      tp.paint(canvas, Offset(rect.left + (pillWidth - tp.width) / 2, rect.top + (pillHeight - tp.height) / 2));
     }
   }
 
@@ -223,6 +265,40 @@ class _KeyboardPainter extends CustomPainter {
   bool shouldRepaint(covariant _KeyboardPainter oldDelegate) {
     return oldDelegate.currentNote != currentNote;
   }
+
+  _FingerInfo _fingerInfo(int midi) {
+    final isRight = midi >= 60; // Middle C and above -> right hand
+    // Find nearest white key index for stability
+    final whiteKeys = <int>[];
+    for (int m = 21; m <= 108; m++) {
+      if (_whitePattern.contains(m % 12)) whiteKeys.add(m);
+    }
+    int whiteIndex = whiteKeys.indexWhere((m) => m == midi);
+    if (whiteIndex == -1) {
+      // black key: use preceding white
+      int prev = midi - 1;
+      while (prev >= 21) {
+        if (_whitePattern.contains(prev % 12)) {
+          whiteIndex = whiteKeys.indexWhere((m) => m == prev);
+          break;
+        }
+        prev--;
+      }
+    }
+    whiteIndex = whiteIndex < 0 ? 0 : whiteIndex;
+    final mod = whiteIndex % 5;
+    final finger = isRight ? (mod + 1) : (5 - mod);
+    final handLabel = isRight ? 'RH' : 'LH';
+    final label = '$handLabel $finger';
+    final color = isRight ? Colors.blueAccent : Colors.green;
+    return _FingerInfo(label, color);
+  }
+}
+
+class _FingerInfo {
+  _FingerInfo(this.label, this.color);
+  final String label;
+  final Color color;
 }
 
 class _MiniSurroundPainter extends CustomPainter {

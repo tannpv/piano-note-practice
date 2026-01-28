@@ -109,14 +109,12 @@ class PracticeController extends ChangeNotifier {
 
   List<MusicNote> _buildQueue([MusicNote? seed]) {
     final list = <MusicNote>[];
-    MusicNote? last = settings.scaleOrdered ? seed : null;
+    MusicNote? last = seed;
     for (int i = 0; i < 8; i++) {
-      final n = _noteGenerator.generate(
-        _settings,
-        lastNote: settings.scaleOrdered ? last : null,
-      );
+      final n = _noteGenerator.generate(_settings,
+          lastNote: _settings.avoidRepeats ? last : null);
       list.add(n);
-      last = settings.scaleOrdered ? n : null;
+      last = n;
     }
     return list;
   }

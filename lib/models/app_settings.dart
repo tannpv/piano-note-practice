@@ -66,17 +66,17 @@ class AppSettings {
   }
 
   Map<String, dynamic> toJson() => {
-        'clefMode': clefMode.name,
-        'rangePreset': rangePreset.name,
-        'displaySeconds': displaySeconds,
-        'accidentalsEnabled': accidentalsEnabled,
-        'avoidRepeats': avoidRepeats,
-        'showKeyboard': showKeyboard,
-        'soundEnabled': soundEnabled,
-        'scaleRoot': scaleRoot,
-        'scaleMode': scaleMode,
-        'scaleOrdered': scaleOrdered,
-      };
+    'clefMode': clefMode.name,
+    'rangePreset': rangePreset.name,
+    'displaySeconds': displaySeconds,
+    'accidentalsEnabled': accidentalsEnabled,
+    'avoidRepeats': avoidRepeats,
+    'showKeyboard': showKeyboard,
+    'soundEnabled': soundEnabled,
+    'scaleRoot': scaleRoot,
+    'scaleMode': scaleMode,
+    'scaleOrdered': scaleOrdered,
+  };
 
   factory AppSettings.fromJson(Map<String, dynamic> json) {
     return AppSettings(
@@ -88,9 +88,11 @@ class AppSettings {
         (r) => r.name == json['rangePreset'],
         orElse: () => AppSettings.defaults.rangePreset,
       ),
-      displaySeconds: (json['displaySeconds'] as num?)?.toDouble() ??
+      displaySeconds:
+          (json['displaySeconds'] as num?)?.toDouble() ??
           AppSettings.defaults.displaySeconds,
-      accidentalsEnabled: json['accidentalsEnabled'] as bool? ??
+      accidentalsEnabled:
+          json['accidentalsEnabled'] as bool? ??
           AppSettings.defaults.accidentalsEnabled,
       avoidRepeats:
           json['avoidRepeats'] as bool? ?? AppSettings.defaults.avoidRepeats,

@@ -28,22 +28,15 @@ class NoteGenerator {
       throw StateError('No notes available for current settings');
     }
 
-    // If a scale filter is active, step through the scale in order for clarity.
-    if (scaleFilter != null) {
-      final idx = lastNote == null
-          ? 0
-          : pool.indexWhere((n) =>
-              n.displayName == lastNote.displayName && n.clef == lastNote.clef);
-      final nextIdx = idx >= 0 ? (idx + 1) % pool.length : 0;
-      return pool[nextIdx];
-    }
-
     final ordered = settings.scaleOrdered && scaleFilter != null;
     if (ordered) {
       final idx = lastNote == null
           ? 0
-          : pool.indexWhere((n) =>
-              n.displayName == lastNote.displayName && n.clef == lastNote.clef);
+          : pool.indexWhere(
+              (n) =>
+                  n.displayName == lastNote.displayName &&
+                  n.clef == lastNote.clef,
+            );
       final nextIdx = idx >= 0 ? (idx + 1) % pool.length : 0;
       return pool[nextIdx];
     }
@@ -141,7 +134,10 @@ class NoteGenerator {
   }
 
   Set<int>? _scaleSet(AppSettings settings) {
-    final scale = ScaleGenerator.buildScale(settings.scaleRoot, settings.scaleMode);
+    final scale = ScaleGenerator.buildScale(
+      settings.scaleRoot,
+      settings.scaleMode,
+    );
     if (scale.isEmpty) return null;
     return scale.map((n) => _noteNameToSemitone(n)).whereType<int>().toSet();
   }

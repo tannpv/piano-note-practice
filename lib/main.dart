@@ -9,9 +9,11 @@ Future<void> main() async {
   final initialSettings = await settingsStore.load();
   final noteGenerator = NoteGenerator();
 
-  runApp(PinanoApp(
-    settingsStore: settingsStore,
-    noteGenerator: noteGenerator,
-    initialSettings: initialSettings,
-  ));
+  runApp(
+    PianoApp(
+      settingsStore: settingsStore,
+      noteGenerator: noteGenerator,
+      initialSettings: initialSettings,
+    ),
+  );
 }

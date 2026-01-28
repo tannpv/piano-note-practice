@@ -34,11 +34,12 @@ class PracticeScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Pinano Note Practice'),
+        title: const Text('Piano Note Practice'),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
-            onPressed: () => Navigator.of(context).pushNamed(SettingsScreen.routeName),
+            onPressed: () =>
+                Navigator.of(context).pushNamed(SettingsScreen.routeName),
           ),
         ],
       ),
@@ -49,11 +50,14 @@ class PracticeScreen extends StatelessWidget {
             _ClefChips(),
             Expanded(
               child: Center(
-                child: AspectRatio(
-                  aspectRatio: 4 / 3,
-                  child: StaffView(
-                    notes: notes,
-                    highlightIndex: controller.highlightIndex,
+                child: FractionallySizedBox(
+                  widthFactor: 0.9, // target ~90% of available width
+                  child: AspectRatio(
+                    aspectRatio: 4 / 3,
+                    child: StaffView(
+                      notes: notes,
+                      highlightIndex: controller.highlightIndex,
+                    ),
                   ),
                 ),
               ),
@@ -62,10 +66,9 @@ class PracticeScreen extends StatelessWidget {
             if (note != null)
               Text(
                 '${note.displayName} (${_solfege(note)})',
-                style: Theme.of(context)
-                    .textTheme
-                    .headlineMedium
-                    ?.copyWith(fontWeight: FontWeight.bold),
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             const SizedBox(height: 12),
             DurationProgress(
@@ -80,8 +83,9 @@ class PracticeScreen extends StatelessWidget {
               children: [
                 ElevatedButton.icon(
                   onPressed: controller.toggleRunning,
-                  icon:
-                      Icon(controller.isRunning ? Icons.pause : Icons.play_arrow),
+                  icon: Icon(
+                    controller.isRunning ? Icons.pause : Icons.play_arrow,
+                  ),
                   label: Text(controller.isRunning ? 'Pause' : 'Start'),
                 ),
                 OutlinedButton.icon(
@@ -90,8 +94,8 @@ class PracticeScreen extends StatelessWidget {
                   label: const Text('Next'),
                 ),
                 OutlinedButton.icon(
-                  onPressed: () => Navigator.of(context)
-                      .pushNamed(SettingsScreen.routeName),
+                  onPressed: () =>
+                      Navigator.of(context).pushNamed(SettingsScreen.routeName),
                   icon: const Icon(Icons.settings),
                   label: const Text('Settings'),
                 ),

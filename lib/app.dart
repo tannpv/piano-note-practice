@@ -8,8 +8,8 @@ import 'services/note_generator.dart';
 import 'services/practice_controller.dart';
 import 'services/settings_store.dart';
 
-class PinanoApp extends StatelessWidget {
-  const PinanoApp({
+class PianoApp extends StatelessWidget {
+  const PianoApp({
     super.key,
     required this.settingsStore,
     required this.noteGenerator,
@@ -33,15 +33,13 @@ class PinanoApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
-        title: 'Pinano Note Practice',
+        title: 'Piano Note Practice',
         theme: ThemeData(
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
         ),
         home: const PracticeScreen(),
-        routes: {
-          SettingsScreen.routeName: (_) => const SettingsScreen(),
-        },
+        routes: {SettingsScreen.routeName: (_) => const SettingsScreen()},
       ),
     );
   }

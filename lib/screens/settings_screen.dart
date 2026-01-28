@@ -26,8 +26,7 @@ class SettingsScreen extends StatelessWidget {
         children: [
           _Section(
             title: 'Clef Mode',
-            subtitle:
-                'Both selects treble or bass randomly for each new note.',
+            subtitle: 'Both selects treble or bass randomly for each new note.',
             child: DropdownButton<ClefMode>(
               value: settings.clefMode,
               isExpanded: true,
@@ -37,10 +36,7 @@ class SettingsScreen extends StatelessWidget {
                 }
               },
               items: ClefMode.values
-                  .map((c) => DropdownMenuItem(
-                        value: c,
-                        child: Text(c.label),
-                      ))
+                  .map((c) => DropdownMenuItem(value: c, child: Text(c.label)))
                   .toList(),
             ),
           ),
@@ -56,10 +52,7 @@ class SettingsScreen extends StatelessWidget {
                 }
               },
               items: RangePreset.values
-                  .map((r) => DropdownMenuItem(
-                        value: r,
-                        child: Text(r.label),
-                      ))
+                  .map((r) => DropdownMenuItem(value: r, child: Text(r.label)))
                   .toList(),
             ),
           ),
@@ -112,7 +105,8 @@ class SettingsScreen extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           _Section(
-            title: 'Display Duration (${settings.displaySeconds.toStringAsFixed(1)}s)',
+            title:
+                'Display Duration (${settings.displaySeconds.toStringAsFixed(1)}s)',
             child: Slider(
               value: settings.displaySeconds,
               min: 0.5,
@@ -154,11 +148,7 @@ class SettingsScreen extends StatelessWidget {
 }
 
 class _Section extends StatelessWidget {
-  const _Section({
-    required this.title,
-    required this.child,
-    this.subtitle,
-  });
+  const _Section({required this.title, required this.child, this.subtitle});
 
   final String title;
   final Widget child;

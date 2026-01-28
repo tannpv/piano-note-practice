@@ -1,17 +1,16 @@
 import 'dart:math';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pinano_note_practice/models/app_settings.dart';
-import 'package:pinano_note_practice/models/clef.dart';
-import 'package:pinano_note_practice/models/music_note.dart';
-import 'package:pinano_note_practice/services/note_generator.dart';
+import 'package:piano_note_practice/models/app_settings.dart';
+import 'package:piano_note_practice/models/clef.dart';
+import 'package:piano_note_practice/models/music_note.dart';
+import 'package:piano_note_practice/services/note_generator.dart';
 
 void main() {
   group('NoteGenerator', () {
     test('respects treble beginner range', () {
       final generator = NoteGenerator(random: Random(1));
-      final settings =
-          AppSettings.defaults.copyWith(clefMode: ClefMode.treble);
+      final settings = AppSettings.defaults.copyWith(clefMode: ClefMode.treble);
       final note = generator.generate(settings);
       expect(note.clef, ClefMode.treble);
       expect(note.midiNoteNumber, inInclusiveRange(60, 81));

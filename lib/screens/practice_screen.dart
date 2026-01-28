@@ -61,7 +61,7 @@ class PracticeScreen extends StatelessWidget {
             const SizedBox(height: 12),
             if (note != null)
               Text(
-                note.displayName,
+                '${note.displayName} (${_solfege(note)})',
                 style: Theme.of(context)
                     .textTheme
                     .headlineMedium
@@ -107,7 +107,7 @@ class PracticeScreen extends StatelessWidget {
             if (note != null) ...[
               const SizedBox(height: 8),
               Text(
-                'Key shown: ${note.displayName}  •  Solfège: ${_solfege(note)}  •  MIDI ${note.midiNoteNumber}',
+                'Key shown: ${note.displayName} (${_solfege(note)})  •  MIDI ${note.midiNoteNumber}',
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
             ],

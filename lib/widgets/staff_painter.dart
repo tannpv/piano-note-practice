@@ -4,9 +4,10 @@ import '../models/clef.dart';
 import '../models/music_note.dart';
 
 class StaffPainter extends CustomPainter {
-  StaffPainter({required this.note});
+  StaffPainter({required this.notes, required this.highlightIndex});
 
-  final MusicNote? note;
+  final List<MusicNote> notes;
+  final int highlightIndex;
   final double lineSpacing = 14;
 
   static const _stepIndex = {
@@ -35,8 +36,10 @@ class StaffPainter extends CustomPainter {
       canvas.drawLine(Offset(left, y), Offset(right, y), paint);
     }
 
-    // Clef symbol
-    final clef = note?.clef ?? ClefMode.treble;
+    // Clef from current note or default treble
+    final clef = notes.isNotEmpty
+        ? notes[highlightIndex.clamp(0, notes.length - 1)].clef
+        : ClefMode.treble;
     final clefText = _clefSymbol(clef);
     final clefPainter = TextPainter(
       text: TextSpan(
@@ -56,15 +59,27 @@ class StaffPainter extends CustomPainter {
     // Bass clef anchor centers dots on F line; treble curl sits on G line.
     final anchorFactor = clef == ClefMode.bass ? 0.36 : 0.62;
     final clefOffset = Offset(
-      left - 6, // small left shift to overlap staff nicely
+      left - 6,
       targetY - clefPainter.height * anchorFactor,
     );
     clefPainter.paint(canvas, clefOffset);
 
-    if (note == null) return;
+    if (notes.isEmpty) return;
 
-    final noteX = left + 70;
-    final offset = _staffOffset(note!);
+    final spacing = (right - left - 80) /
+        (notes.length > 1 ? (notes.length - 1) : 1).clamp(1, 7);
+    for (int i = 0; i < notes.length; i++) {
+      final note = notes[i];
+      final noteX = left + 60 + i * spacing;
+      _drawNote(canvas, paint, note, noteX, bottomY, left, right,
+          isHighlight: i == highlightIndex);
+    }
+  }
+
+  void _drawNote(Canvas canvas, Paint paint, MusicNote note, double noteX,
+      double bottomY, double left, double right,
+      {bool isHighlight = false}) {
+    final offset = _staffOffset(note);
     final noteY = bottomY - offset * (lineSpacing / 2);
     final headWidth = lineSpacing * 1.2;
     final headHeight = lineSpacing * 0.9;
@@ -73,25 +88,33 @@ class StaffPainter extends CustomPainter {
     _drawLedgerLines(
         canvas, paint, bottomY, noteX, headWidth, offset, left, right);
 
+    final color = isHighlight ? Colors.red : Colors.black;
+    final notePaint = Paint()
+      ..color = color
+      ..style = PaintingStyle.fill;
+
     // Note head
     final headRect = Rect.fromCenter(
       center: Offset(noteX, noteY),
       width: headWidth,
       height: headHeight,
     );
-    canvas.drawOval(headRect, paint);
+    canvas.drawOval(headRect, notePaint);
 
     // Stem direction: above middle line => stem down
     final stemUp = offset <= 4;
     final stemLength = lineSpacing * 3.5;
+    final stemPaint = Paint()
+      ..color = color
+      ..strokeWidth = paint.strokeWidth;
     if (stemUp) {
       final start = Offset(noteX + headWidth / 2, noteY);
       final end = Offset(start.dx, noteY - stemLength);
-      canvas.drawLine(start, end, paint);
+      canvas.drawLine(start, end, stemPaint);
     } else {
       final start = Offset(noteX - headWidth / 2, noteY);
       final end = Offset(start.dx, noteY + stemLength);
-      canvas.drawLine(start, end, paint);
+      canvas.drawLine(start, end, stemPaint);
     }
   }
 
@@ -116,8 +139,8 @@ class StaffPainter extends CustomPainter {
 
   int _staffOffset(MusicNote note) {
     final referenceIndex = note.clef == ClefMode.treble
-        ? _diatonicIndex('E', 4) // Treble bottom line
-        : _diatonicIndex('G', 2); // Bass bottom line
+        ? _diatonicIndex('E', 4)
+        : _diatonicIndex('G', 2);
     final noteIndex = _diatonicIndex(note.step, note.octave);
     return noteIndex - referenceIndex;
   }
@@ -140,6 +163,7 @@ class StaffPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant StaffPainter oldDelegate) {
-    return oldDelegate.note != note;
+    return oldDelegate.notes != notes ||
+        oldDelegate.highlightIndex != highlightIndex;
   }
 }

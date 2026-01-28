@@ -20,7 +20,7 @@ class PracticeScreen extends StatelessWidget {
       'F': 'Fa',
       'G': 'Sol',
       'A': 'La',
-      'B': 'Ti',
+      'B': 'Si',
     };
     final base = map[note.step] ?? note.step;
     return note.sharp ? '$base#' : base;

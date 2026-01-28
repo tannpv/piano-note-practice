@@ -61,7 +61,7 @@ class _KeyboardPainter extends CustomPainter {
       5: 'Fa',
       7: 'Sol',
       9: 'La',
-      11: 'Ti',
+      11: 'Si',
     };
 
     // Alternating octave bands for visual grouping across full 88 keys.

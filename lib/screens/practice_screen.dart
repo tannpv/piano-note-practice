@@ -30,6 +30,7 @@ class PracticeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = context.watch<PracticeController>();
     final note = controller.currentNote;
+    final notes = controller.queue;
 
     return Scaffold(
       appBar: AppBar(
@@ -50,7 +51,10 @@ class PracticeScreen extends StatelessWidget {
               child: Center(
                 child: AspectRatio(
                   aspectRatio: 4 / 3,
-                  child: StaffView(note: note),
+                  child: StaffView(
+                    notes: notes,
+                    highlightIndex: controller.highlightIndex,
+                  ),
                 ),
               ),
             ),

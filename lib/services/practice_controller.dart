@@ -17,7 +17,7 @@ class PracticeController extends ChangeNotifier {
         _noteGenerator = noteGenerator,
         _settings = initialSettings {
     _tonePlayer = TonePlayer();
-    _currentNote = _noteGenerator.generate(_settings);
+    _queue = _buildQueue();
     _remainingSeconds = _settings.displaySeconds;
   }
 
@@ -28,8 +28,12 @@ class PracticeController extends ChangeNotifier {
   AppSettings _settings;
   AppSettings get settings => _settings;
 
-  MusicNote? _currentNote;
-  MusicNote? get currentNote => _currentNote;
+  late List<MusicNote> _queue;
+  List<MusicNote> get queue => List.unmodifiable(_queue);
+  int _highlightIndex = 0;
+  int get highlightIndex => _highlightIndex;
+  MusicNote? get currentNote =>
+      _queue.isNotEmpty ? _queue[_highlightIndex] : null;
 
   bool _isRunning = false;
   bool get isRunning => _isRunning;
@@ -62,13 +66,20 @@ class PracticeController extends ChangeNotifier {
   }
 
   void nextNote() {
-    _currentNote = _noteGenerator.generate(
-      _settings,
-      lastNote: _currentNote,
-    );
+    if (_queue.isEmpty) {
+      _queue = _buildQueue();
+      _highlightIndex = 0;
+    } else {
+      _highlightIndex++;
+      if (_highlightIndex >= _queue.length) {
+        _queue = _buildQueue(_queue.last);
+        _highlightIndex = 0;
+      }
+    }
+
     _remainingSeconds = _settings.displaySeconds;
-    if (_currentNote != null && _settings.soundEnabled) {
-      _playNote(_currentNote!);
+    if (currentNote != null && _settings.soundEnabled) {
+      _playNote(currentNote!);
     }
     notifyListeners();
   }
@@ -76,10 +87,8 @@ class PracticeController extends ChangeNotifier {
   Future<void> updateSettings(AppSettings newSettings) async {
     _settings = newSettings;
     await _settingsStore.save(newSettings);
-    _currentNote = _noteGenerator.generate(
-      newSettings,
-      lastNote: _currentNote,
-    );
+    _queue = _buildQueue();
+    _highlightIndex = 0;
     _remainingSeconds = newSettings.displaySeconds;
     notifyListeners();
   }
@@ -96,6 +105,17 @@ class PracticeController extends ChangeNotifier {
         notifyListeners();
       }
     });
+  }
+
+  List<MusicNote> _buildQueue([MusicNote? seed]) {
+    final list = <MusicNote>[];
+    MusicNote? last = seed;
+    for (int i = 0; i < 7; i++) {
+      final n = _noteGenerator.generate(_settings, lastNote: last);
+      list.add(n);
+      last = n;
+    }
+    return list;
   }
 
   @override

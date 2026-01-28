@@ -7,7 +7,6 @@ import '../services/practice_controller.dart';
 import '../widgets/duration_progress.dart';
 import '../widgets/piano_keyboard.dart';
 import '../widgets/staff_view.dart';
-import '../widgets/hands_legend.dart';
 import 'settings_screen.dart';
 
 class PracticeScreen extends StatelessWidget {
@@ -108,10 +107,6 @@ class PracticeScreen extends StatelessWidget {
                   showFingerHints: controller.settings.showFingerHints,
                 ),
               ),
-            if (controller.settings.showFingerHints) ...[
-              const SizedBox(height: 8),
-              const HandsLegend(),
-            ],
             if (note != null) ...[
               const SizedBox(height: 8),
               Text(

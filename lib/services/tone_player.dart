@@ -10,8 +10,11 @@ class TonePlayer {
   final AudioPlayer _player;
   final Map<int, Uint8List> _cache = {};
 
-  Future<void> playMidi(int midi,
-      {double seconds = 0.8, double volume = 0.7}) async {
+  Future<void> playMidi(
+    int midi, {
+    double seconds = 0.8,
+    double volume = 0.7,
+  }) async {
     final buffer = _cache.putIfAbsent(midi, () => _buildWave(midi, seconds));
     await _player.stop();
     await _player.play(BytesSource(buffer), volume: volume);
@@ -49,11 +52,8 @@ class TonePlayer {
       final h2 = sin(2 * pi * freq * 2 * t) * exp(-t / 0.35);
       final h3 = sin(2 * pi * freq * 3 * t) * exp(-t / 0.25);
       final h4 = sin(2 * pi * freq * 4 * t) * exp(-t / 0.18);
-      final mixed = (fundamental +
-              0.5 * h2 +
-              0.32 * h3 +
-              0.2 * h4) /
-          2.02; // normalize
+      final mixed =
+          (fundamental + 0.5 * h2 + 0.32 * h3 + 0.2 * h4) / 2.02; // normalize
       final sample = (baseAmp * env * mixed * 32767).round();
       bytes.add(_int16(sample));
     }
@@ -70,7 +70,10 @@ class TonePlayer {
   }
 
   List<int> _ascii(String s) => s.codeUnits;
-  List<int> _uint16(int v) => Uint8List(2)..buffer.asByteData().setUint16(0, v, Endian.little);
-  List<int> _uint32(int v) => Uint8List(4)..buffer.asByteData().setUint32(0, v, Endian.little);
-  List<int> _int16(int v) => Uint8List(2)..buffer.asByteData().setInt16(0, v, Endian.little);
+  List<int> _uint16(int v) =>
+      Uint8List(2)..buffer.asByteData().setUint16(0, v, Endian.little);
+  List<int> _uint32(int v) =>
+      Uint8List(4)..buffer.asByteData().setUint32(0, v, Endian.little);
+  List<int> _int16(int v) =>
+      Uint8List(2)..buffer.asByteData().setInt16(0, v, Endian.little);
 }

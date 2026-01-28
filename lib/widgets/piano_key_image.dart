@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 
 class PianoKeyImage extends StatelessWidget {
-  const PianoKeyImage({
-    super.key,
-    required this.isBlack,
-    required this.label,
-  });
+  const PianoKeyImage({super.key, required this.isBlack, required this.label});
 
   final bool isBlack;
   final String label;
@@ -20,9 +16,7 @@ class PianoKeyImage extends StatelessWidget {
         SizedBox(
           width: width,
           height: height,
-          child: CustomPaint(
-            painter: _KeyPainter(isBlack: isBlack),
-          ),
+          child: CustomPaint(painter: _KeyPainter(isBlack: isBlack)),
         ),
         const SizedBox(height: 4),
         Text(label, style: Theme.of(context).textTheme.bodySmall),

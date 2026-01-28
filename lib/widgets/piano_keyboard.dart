@@ -9,9 +9,7 @@ class PianoKeyboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomPaint(
-      painter: _KeyboardPainter(currentNote: currentNote),
-    );
+    return CustomPaint(painter: _KeyboardPainter(currentNote: currentNote));
   }
 }
 
@@ -24,9 +22,7 @@ class MiniSurroundKeyboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (currentNote == null) return const SizedBox.shrink();
-    return CustomPaint(
-      painter: _MiniSurroundPainter(note: currentNote!),
-    );
+    return CustomPaint(painter: _MiniSurroundPainter(note: currentNote!));
   }
 }
 
@@ -212,7 +208,7 @@ class _KeyboardPainter extends CustomPainter {
       'G#',
       'A',
       'A#',
-      'B'
+      'B',
     ];
     final name = names[midi % 12];
     final octave = midi ~/ 12 - 1;

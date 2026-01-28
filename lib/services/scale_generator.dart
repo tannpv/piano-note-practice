@@ -44,17 +44,49 @@ class ScaleGenerator {
 
   /// Randomly picks [count] notes from the specified scale (with repetition).
   static List<String> generateRandomPracticeNotes(
-      String scaleMode, String root, int count) {
+    String scaleMode,
+    String root,
+    int count,
+  ) {
     final scale = buildScale(root, scaleMode);
     if (scale.isEmpty || count <= 0) return [];
     final rand = Random();
-    return List<String>.generate(count, (_) => scale[rand.nextInt(scale.length)]);
+    return List<String>.generate(
+      count,
+      (_) => scale[rand.nextInt(scale.length)],
+    );
   }
 
   static String _semitoneToName(int value, {bool preferFlat = false}) {
     value = value % 12;
-    const sharpNames = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
-    const flatNames = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'];
+    const sharpNames = [
+      'C',
+      'C#',
+      'D',
+      'D#',
+      'E',
+      'F',
+      'F#',
+      'G',
+      'G#',
+      'A',
+      'A#',
+      'B',
+    ];
+    const flatNames = [
+      'C',
+      'Db',
+      'D',
+      'Eb',
+      'E',
+      'F',
+      'Gb',
+      'G',
+      'Ab',
+      'A',
+      'Bb',
+      'B',
+    ];
     return preferFlat ? flatNames[value] : sharpNames[value];
   }
 }

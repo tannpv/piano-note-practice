@@ -66,19 +66,35 @@ class StaffPainter extends CustomPainter {
 
     if (notes.isEmpty) return;
 
-    final spacing = (right - left - 80) /
+    final spacing =
+        (right - left - 80) /
         (notes.length > 1 ? (notes.length - 1) : 1).clamp(1, 8);
     for (int i = 0; i < notes.length; i++) {
       final note = notes[i];
       final noteX = left + 60 + i * spacing;
-      _drawNote(canvas, paint, note, noteX, bottomY, left, right,
-          isHighlight: i == highlightIndex);
+      _drawNote(
+        canvas,
+        paint,
+        note,
+        noteX,
+        bottomY,
+        left,
+        right,
+        isHighlight: i == highlightIndex,
+      );
     }
   }
 
-  void _drawNote(Canvas canvas, Paint paint, MusicNote note, double noteX,
-      double bottomY, double left, double right,
-      {bool isHighlight = false}) {
+  void _drawNote(
+    Canvas canvas,
+    Paint paint,
+    MusicNote note,
+    double noteX,
+    double bottomY,
+    double left,
+    double right, {
+    bool isHighlight = false,
+  }) {
     final offset = _staffOffset(note);
     final noteY = bottomY - offset * (lineSpacing / 2);
     final headWidth = lineSpacing * 1.2;
@@ -86,7 +102,15 @@ class StaffPainter extends CustomPainter {
 
     // Ledger lines for out-of-staff notes
     _drawLedgerLines(
-        canvas, paint, bottomY, noteX, headWidth, offset, left, right);
+      canvas,
+      paint,
+      bottomY,
+      noteX,
+      headWidth,
+      offset,
+      left,
+      right,
+    );
 
     final color = isHighlight ? Colors.red : Colors.black;
     final notePaint = Paint()
@@ -118,8 +142,16 @@ class StaffPainter extends CustomPainter {
     }
   }
 
-  void _drawLedgerLines(Canvas canvas, Paint paint, double bottomY, double noteX,
-      double headWidth, int offset, double left, double right) {
+  void _drawLedgerLines(
+    Canvas canvas,
+    Paint paint,
+    double bottomY,
+    double noteX,
+    double headWidth,
+    int offset,
+    double left,
+    double right,
+  ) {
     final lineLength = headWidth * 1.8;
     final usableLeft = (noteX - lineLength / 2).clamp(left, right - lineLength);
     final usableRight = usableLeft + lineLength;

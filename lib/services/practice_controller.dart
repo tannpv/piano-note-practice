@@ -14,9 +14,9 @@ class PracticeController extends ChangeNotifier {
     required SettingsStore settingsStore,
     required NoteGenerator noteGenerator,
     required AppSettings initialSettings,
-  })  : _settingsStore = settingsStore,
-        _noteGenerator = noteGenerator,
-        _settings = initialSettings {
+  }) : _settingsStore = settingsStore,
+       _noteGenerator = noteGenerator,
+       _settings = initialSettings {
     _tonePlayer = TonePlayer();
     _queue = _buildQueue();
     _remainingSeconds = _settings.displaySeconds;
@@ -115,7 +115,11 @@ class PracticeController extends ChangeNotifier {
     for (int i = 0; i < 8; i++) {
       final n = _noteGenerator.generate(
         _settings,
-        lastNote: _settings.scaleOrdered && _settings.avoidRepeats ? last : null,
+        // For ordered scales we must pass the previous note so the generator
+        // can advance through the scale; also use it for avoid-repeats.
+        lastNote: (_settings.scaleOrdered || _settings.avoidRepeats)
+            ? last
+            : null,
       );
       list.add(n);
       last = n;

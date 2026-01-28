@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pinano_note_practice/models/app_settings.dart';
-import 'package:pinano_note_practice/models/clef.dart';
-import 'package:pinano_note_practice/models/range_preset.dart';
+import 'package:piano_note_practice/models/app_settings.dart';
+import 'package:piano_note_practice/models/clef.dart';
+import 'package:piano_note_practice/models/range_preset.dart';
 
 void main() {
   test('serializes and deserializes correctly', () {

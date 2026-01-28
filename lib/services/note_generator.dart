@@ -48,16 +48,16 @@ class NoteGenerator {
       return pool[nextIdx];
     }
 
-    MusicNote candidate = pool.first;
+    MusicNote candidate = pool[_random.nextInt(pool.length)];
+    if (!settings.avoidRepeats || lastNote == null) {
+      return candidate;
+    }
     for (int i = 0; i < pool.length * 2; i++) {
-      candidate = pool[_random.nextInt(pool.length)];
-      if (!settings.avoidRepeats || lastNote == null) {
-        return candidate;
-      }
       if (candidate.displayName != lastNote.displayName ||
           candidate.clef != lastNote.clef) {
         return candidate;
       }
+      candidate = pool[_random.nextInt(pool.length)];
     }
     return candidate;
   }

@@ -102,10 +102,7 @@ class PracticeScreen extends StatelessWidget {
               SizedBox(
                 height: 160,
                 width: double.infinity,
-                child: PianoKeyboard(
-                  currentNote: note,
-                  showFingerHints: controller.settings.showFingerHints,
-                ),
+                child: PianoKeyboard(currentNote: note),
               ),
             if (note != null) ...[
               const SizedBox(height: 8),

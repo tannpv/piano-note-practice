@@ -9,7 +9,6 @@ class AppSettings {
     required this.accidentalsEnabled,
     required this.avoidRepeats,
     required this.showKeyboard,
-    required this.showFingerHints,
     required this.soundEnabled,
   });
 
@@ -19,8 +18,7 @@ class AppSettings {
   final bool accidentalsEnabled;
   final bool avoidRepeats;
   final bool showKeyboard;
-  final bool showFingerHints;
-  final bool soundEnabled;
+   final bool soundEnabled;
 
   static const AppSettings defaults = AppSettings(
     clefMode: ClefMode.both,
@@ -29,7 +27,6 @@ class AppSettings {
     accidentalsEnabled: false,
     avoidRepeats: true,
     showKeyboard: true,
-    showFingerHints: true,
     soundEnabled: true,
   );
 
@@ -40,7 +37,6 @@ class AppSettings {
     bool? accidentalsEnabled,
     bool? avoidRepeats,
     bool? showKeyboard,
-    bool? showFingerHints,
     bool? soundEnabled,
   }) {
     return AppSettings(
@@ -50,7 +46,6 @@ class AppSettings {
       accidentalsEnabled: accidentalsEnabled ?? this.accidentalsEnabled,
       avoidRepeats: avoidRepeats ?? this.avoidRepeats,
       showKeyboard: showKeyboard ?? this.showKeyboard,
-      showFingerHints: showFingerHints ?? this.showFingerHints,
       soundEnabled: soundEnabled ?? this.soundEnabled,
     );
   }
@@ -62,7 +57,6 @@ class AppSettings {
         'accidentalsEnabled': accidentalsEnabled,
         'avoidRepeats': avoidRepeats,
         'showKeyboard': showKeyboard,
-        'showFingerHints': showFingerHints,
         'soundEnabled': soundEnabled,
       };
 
@@ -84,8 +78,6 @@ class AppSettings {
           json['avoidRepeats'] as bool? ?? AppSettings.defaults.avoidRepeats,
       showKeyboard:
           json['showKeyboard'] as bool? ?? AppSettings.defaults.showKeyboard,
-      showFingerHints: json['showFingerHints'] as bool? ??
-          AppSettings.defaults.showFingerHints,
       soundEnabled:
           json['soundEnabled'] as bool? ?? AppSettings.defaults.soundEnabled,
     );

@@ -82,11 +82,6 @@ class SettingsScreen extends StatelessWidget {
             onChanged: (v) => update(settings.copyWith(accidentalsEnabled: v)),
           ),
           SwitchListTile(
-            title: const Text('Show finger hints on keyboard'),
-            value: settings.showFingerHints,
-            onChanged: (v) => update(settings.copyWith(showFingerHints: v)),
-          ),
-          SwitchListTile(
             title: const Text('Sound on'),
             value: settings.soundEnabled,
             onChanged: (v) => update(settings.copyWith(soundEnabled: v)),

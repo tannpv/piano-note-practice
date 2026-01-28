@@ -29,6 +29,8 @@ void main() {
       final generator = NoteGenerator(random: Random(3));
       final settings = AppSettings.defaults.copyWith(
         accidentalsEnabled: true,
+        scaleRoot: 'D',
+        scaleMode: 'major',
       );
       bool sawSharp = false;
       MusicNote? last;

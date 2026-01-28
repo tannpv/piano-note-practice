@@ -67,7 +67,7 @@ class StaffPainter extends CustomPainter {
     if (notes.isEmpty) return;
 
     final spacing = (right - left - 80) /
-        (notes.length > 1 ? (notes.length - 1) : 1).clamp(1, 7);
+        (notes.length > 1 ? (notes.length - 1) : 1).clamp(1, 8);
     for (int i = 0; i < notes.length; i++) {
       final note = notes[i];
       final noteX = left + 60 + i * spacing;

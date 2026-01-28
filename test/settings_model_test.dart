@@ -13,6 +13,9 @@ void main() {
       avoidRepeats: false,
       showKeyboard: false,
       soundEnabled: true,
+      scaleRoot: 'D',
+      scaleMode: 'minor',
+      scaleOrdered: true,
     );
 
     final json = settings.toJson();
@@ -24,6 +27,9 @@ void main() {
     expect(restored.accidentalsEnabled, settings.accidentalsEnabled);
     expect(restored.avoidRepeats, settings.avoidRepeats);
     expect(restored.showKeyboard, settings.showKeyboard);
+    expect(restored.scaleRoot, settings.scaleRoot);
+    expect(restored.scaleMode, settings.scaleMode);
+    expect(restored.scaleOrdered, settings.scaleOrdered);
   });
 
   test('defaults are used when json missing values', () {

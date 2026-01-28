@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 
@@ -24,6 +25,7 @@ class PracticeController extends ChangeNotifier {
   final SettingsStore _settingsStore;
   final NoteGenerator _noteGenerator;
   late final TonePlayer _tonePlayer;
+  final Random _random = Random();
 
   AppSettings _settings;
   AppSettings get settings => _settings;
@@ -111,10 +113,15 @@ class PracticeController extends ChangeNotifier {
     final list = <MusicNote>[];
     MusicNote? last = seed;
     for (int i = 0; i < 8; i++) {
-      final n = _noteGenerator.generate(_settings,
-          lastNote: _settings.avoidRepeats ? last : null);
+      final n = _noteGenerator.generate(
+        _settings,
+        lastNote: _settings.scaleOrdered && _settings.avoidRepeats ? last : null,
+      );
       list.add(n);
       last = n;
+    }
+    if (!_settings.scaleOrdered) {
+      list.shuffle(_random);
     }
     return list;
   }

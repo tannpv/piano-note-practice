@@ -1,6 +1,6 @@
 {
-    "name": "pinano_note_practice",
-    "short_name": "pinano_note_practice",
+    "name": "piano_note_practice",
+    "short_name": "piano_note_practice",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

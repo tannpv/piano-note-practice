@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 
@@ -13,23 +14,28 @@ class PracticeController extends ChangeNotifier {
     required SettingsStore settingsStore,
     required NoteGenerator noteGenerator,
     required AppSettings initialSettings,
-  })  : _settingsStore = settingsStore,
-        _noteGenerator = noteGenerator,
-        _settings = initialSettings {
+  }) : _settingsStore = settingsStore,
+       _noteGenerator = noteGenerator,
+       _settings = initialSettings {
     _tonePlayer = TonePlayer();
-    _currentNote = _noteGenerator.generate(_settings);
+    _queue = _buildQueue();
     _remainingSeconds = _settings.displaySeconds;
   }
 
   final SettingsStore _settingsStore;
   final NoteGenerator _noteGenerator;
   late final TonePlayer _tonePlayer;
+  final Random _random = Random();
 
   AppSettings _settings;
   AppSettings get settings => _settings;
 
-  MusicNote? _currentNote;
-  MusicNote? get currentNote => _currentNote;
+  late List<MusicNote> _queue;
+  List<MusicNote> get queue => List.unmodifiable(_queue);
+  int _highlightIndex = 0;
+  int get highlightIndex => _highlightIndex;
+  MusicNote? get currentNote =>
+      _queue.isNotEmpty ? _queue[_highlightIndex] : null;
 
   bool _isRunning = false;
   bool get isRunning => _isRunning;
@@ -62,13 +68,20 @@ class PracticeController extends ChangeNotifier {
   }
 
   void nextNote() {
-    _currentNote = _noteGenerator.generate(
-      _settings,
-      lastNote: _currentNote,
-    );
+    if (_queue.isEmpty) {
+      _queue = _buildQueue();
+      _highlightIndex = 0;
+    } else {
+      _highlightIndex++;
+      if (_highlightIndex >= _queue.length) {
+        _queue = _buildQueue(_queue.last);
+        _highlightIndex = 0;
+      }
+    }
+
     _remainingSeconds = _settings.displaySeconds;
-    if (_currentNote != null && _settings.soundEnabled) {
-      _playNote(_currentNote!);
+    if (currentNote != null && _settings.soundEnabled) {
+      _playNote(currentNote!);
     }
     notifyListeners();
   }
@@ -76,10 +89,8 @@ class PracticeController extends ChangeNotifier {
   Future<void> updateSettings(AppSettings newSettings) async {
     _settings = newSettings;
     await _settingsStore.save(newSettings);
-    _currentNote = _noteGenerator.generate(
-      newSettings,
-      lastNote: _currentNote,
-    );
+    _queue = _buildQueue();
+    _highlightIndex = 0;
     _remainingSeconds = newSettings.displaySeconds;
     notifyListeners();
   }
@@ -96,6 +107,27 @@ class PracticeController extends ChangeNotifier {
         notifyListeners();
       }
     });
+  }
+
+  List<MusicNote> _buildQueue([MusicNote? seed]) {
+    final list = <MusicNote>[];
+    MusicNote? last = seed;
+    for (int i = 0; i < 8; i++) {
+      final n = _noteGenerator.generate(
+        _settings,
+        // For ordered scales we must pass the previous note so the generator
+        // can advance through the scale; also use it for avoid-repeats.
+        lastNote: (_settings.scaleOrdered || _settings.avoidRepeats)
+            ? last
+            : null,
+      );
+      list.add(n);
+      last = n;
+    }
+    if (!_settings.scaleOrdered) {
+      list.shuffle(_random);
+    }
+    return list;
   }
 
   @override

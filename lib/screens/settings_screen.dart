@@ -26,8 +26,7 @@ class SettingsScreen extends StatelessWidget {
         children: [
           _Section(
             title: 'Clef Mode',
-            subtitle:
-                'Both selects treble or bass randomly for each new note.',
+            subtitle: 'Both selects treble or bass randomly for each new note.',
             child: DropdownButton<ClefMode>(
               value: settings.clefMode,
               isExpanded: true,
@@ -37,10 +36,7 @@ class SettingsScreen extends StatelessWidget {
                 }
               },
               items: ClefMode.values
-                  .map((c) => DropdownMenuItem(
-                        value: c,
-                        child: Text(c.label),
-                      ))
+                  .map((c) => DropdownMenuItem(value: c, child: Text(c.label)))
                   .toList(),
             ),
           ),
@@ -56,16 +52,61 @@ class SettingsScreen extends StatelessWidget {
                 }
               },
               items: RangePreset.values
-                  .map((r) => DropdownMenuItem(
-                        value: r,
-                        child: Text(r.label),
-                      ))
+                  .map((r) => DropdownMenuItem(value: r, child: Text(r.label)))
                   .toList(),
             ),
           ),
           const SizedBox(height: 12),
           _Section(
-            title: 'Display Duration (${settings.displaySeconds.toStringAsFixed(1)}s)',
+            title: 'Scale Root',
+            child: DropdownButton<String>(
+              value: settings.scaleRoot,
+              isExpanded: true,
+              onChanged: (v) {
+                if (v != null) update(settings.copyWith(scaleRoot: v));
+              },
+              items: const [
+                'C',
+                'C#',
+                'Db',
+                'D',
+                'Eb',
+                'E',
+                'F',
+                'F#',
+                'Gb',
+                'G',
+                'Ab',
+                'A',
+                'Bb',
+                'B',
+              ].map((v) => DropdownMenuItem(value: v, child: Text(v))).toList(),
+            ),
+          ),
+          const SizedBox(height: 12),
+          _Section(
+            title: 'Scale Mode',
+            child: DropdownButton<String>(
+              value: settings.scaleMode,
+              isExpanded: true,
+              onChanged: (v) {
+                if (v != null) update(settings.copyWith(scaleMode: v));
+              },
+              items: const [
+                DropdownMenuItem(value: 'major', child: Text('Major')),
+                DropdownMenuItem(value: 'minor', child: Text('Minor')),
+              ],
+            ),
+          ),
+          SwitchListTile(
+            title: const Text('Order scale notes (disable for random)'),
+            value: settings.scaleOrdered,
+            onChanged: (v) => update(settings.copyWith(scaleOrdered: v)),
+          ),
+          const SizedBox(height: 12),
+          _Section(
+            title:
+                'Display Duration (${settings.displaySeconds.toStringAsFixed(1)}s)',
             child: Slider(
               value: settings.displaySeconds,
               min: 0.5,
@@ -107,11 +148,7 @@ class SettingsScreen extends StatelessWidget {
 }
 
 class _Section extends StatelessWidget {
-  const _Section({
-    required this.title,
-    required this.child,
-    this.subtitle,
-  });
+  const _Section({required this.title, required this.child, this.subtitle});
 
   final String title;
   final Widget child;

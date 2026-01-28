@@ -1,4 +1,4 @@
-# Pinano Note Practice
+# Piano Note Practice
 
 A Flutter app for sight-reading practice: it shows a single staff note (treble or bass), cycles on a timer, and highlights the matching piano key.
 

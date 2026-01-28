@@ -20,7 +20,7 @@ class PracticeScreen extends StatelessWidget {
       'F': 'Fa',
       'G': 'Sol',
       'A': 'La',
-      'B': 'Ti',
+      'B': 'Si',
     };
     final base = map[note.step] ?? note.step;
     return note.sharp ? '$base#' : base;
@@ -30,14 +30,16 @@ class PracticeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = context.watch<PracticeController>();
     final note = controller.currentNote;
+    final notes = controller.queue;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Pinano Note Practice'),
+        title: const Text('Piano Note Practice'),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
-            onPressed: () => Navigator.of(context).pushNamed(SettingsScreen.routeName),
+            onPressed: () =>
+                Navigator.of(context).pushNamed(SettingsScreen.routeName),
           ),
         ],
       ),
@@ -48,20 +50,25 @@ class PracticeScreen extends StatelessWidget {
             _ClefChips(),
             Expanded(
               child: Center(
-                child: AspectRatio(
-                  aspectRatio: 4 / 3,
-                  child: StaffView(note: note),
+                child: FractionallySizedBox(
+                  widthFactor: 0.9, // target ~90% of available width
+                  child: AspectRatio(
+                    aspectRatio: 4 / 3,
+                    child: StaffView(
+                      notes: notes,
+                      highlightIndex: controller.highlightIndex,
+                    ),
+                  ),
                 ),
               ),
             ),
             const SizedBox(height: 12),
             if (note != null)
               Text(
-                note.displayName,
-                style: Theme.of(context)
-                    .textTheme
-                    .headlineMedium
-                    ?.copyWith(fontWeight: FontWeight.bold),
+                '${note.displayName} (${_solfege(note)})',
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             const SizedBox(height: 12),
             DurationProgress(
@@ -76,8 +83,9 @@ class PracticeScreen extends StatelessWidget {
               children: [
                 ElevatedButton.icon(
                   onPressed: controller.toggleRunning,
-                  icon:
-                      Icon(controller.isRunning ? Icons.pause : Icons.play_arrow),
+                  icon: Icon(
+                    controller.isRunning ? Icons.pause : Icons.play_arrow,
+                  ),
                   label: Text(controller.isRunning ? 'Pause' : 'Start'),
                 ),
                 OutlinedButton.icon(
@@ -86,8 +94,8 @@ class PracticeScreen extends StatelessWidget {
                   label: const Text('Next'),
                 ),
                 OutlinedButton.icon(
-                  onPressed: () => Navigator.of(context)
-                      .pushNamed(SettingsScreen.routeName),
+                  onPressed: () =>
+                      Navigator.of(context).pushNamed(SettingsScreen.routeName),
                   icon: const Icon(Icons.settings),
                   label: const Text('Settings'),
                 ),
@@ -103,7 +111,7 @@ class PracticeScreen extends StatelessWidget {
             if (note != null) ...[
               const SizedBox(height: 8),
               Text(
-                'Key shown: ${note.displayName}  •  Solfège: ${_solfege(note)}  •  MIDI ${note.midiNoteNumber}',
+                'Key shown: ${note.displayName} (${_solfege(note)})  •  MIDI ${note.midiNoteNumber}',
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
             ],

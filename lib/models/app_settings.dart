@@ -10,6 +10,9 @@ class AppSettings {
     required this.avoidRepeats,
     required this.showKeyboard,
     required this.soundEnabled,
+    required this.scaleRoot,
+    required this.scaleMode,
+    required this.scaleOrdered,
   });
 
   final ClefMode clefMode;
@@ -18,7 +21,10 @@ class AppSettings {
   final bool accidentalsEnabled;
   final bool avoidRepeats;
   final bool showKeyboard;
-   final bool soundEnabled;
+  final bool soundEnabled;
+  final String scaleRoot;
+  final String scaleMode;
+  final bool scaleOrdered;
 
   static const AppSettings defaults = AppSettings(
     clefMode: ClefMode.both,
@@ -28,6 +34,9 @@ class AppSettings {
     avoidRepeats: true,
     showKeyboard: true,
     soundEnabled: true,
+    scaleRoot: 'C',
+    scaleMode: 'major',
+    scaleOrdered: false,
   );
 
   AppSettings copyWith({
@@ -38,6 +47,9 @@ class AppSettings {
     bool? avoidRepeats,
     bool? showKeyboard,
     bool? soundEnabled,
+    String? scaleRoot,
+    String? scaleMode,
+    bool? scaleOrdered,
   }) {
     return AppSettings(
       clefMode: clefMode ?? this.clefMode,
@@ -47,18 +59,24 @@ class AppSettings {
       avoidRepeats: avoidRepeats ?? this.avoidRepeats,
       showKeyboard: showKeyboard ?? this.showKeyboard,
       soundEnabled: soundEnabled ?? this.soundEnabled,
+      scaleRoot: scaleRoot ?? this.scaleRoot,
+      scaleMode: scaleMode ?? this.scaleMode,
+      scaleOrdered: scaleOrdered ?? this.scaleOrdered,
     );
   }
 
   Map<String, dynamic> toJson() => {
-        'clefMode': clefMode.name,
-        'rangePreset': rangePreset.name,
-        'displaySeconds': displaySeconds,
-        'accidentalsEnabled': accidentalsEnabled,
-        'avoidRepeats': avoidRepeats,
-        'showKeyboard': showKeyboard,
-        'soundEnabled': soundEnabled,
-      };
+    'clefMode': clefMode.name,
+    'rangePreset': rangePreset.name,
+    'displaySeconds': displaySeconds,
+    'accidentalsEnabled': accidentalsEnabled,
+    'avoidRepeats': avoidRepeats,
+    'showKeyboard': showKeyboard,
+    'soundEnabled': soundEnabled,
+    'scaleRoot': scaleRoot,
+    'scaleMode': scaleMode,
+    'scaleOrdered': scaleOrdered,
+  };
 
   factory AppSettings.fromJson(Map<String, dynamic> json) {
     return AppSettings(
@@ -70,9 +88,11 @@ class AppSettings {
         (r) => r.name == json['rangePreset'],
         orElse: () => AppSettings.defaults.rangePreset,
       ),
-      displaySeconds: (json['displaySeconds'] as num?)?.toDouble() ??
+      displaySeconds:
+          (json['displaySeconds'] as num?)?.toDouble() ??
           AppSettings.defaults.displaySeconds,
-      accidentalsEnabled: json['accidentalsEnabled'] as bool? ??
+      accidentalsEnabled:
+          json['accidentalsEnabled'] as bool? ??
           AppSettings.defaults.accidentalsEnabled,
       avoidRepeats:
           json['avoidRepeats'] as bool? ?? AppSettings.defaults.avoidRepeats,
@@ -80,6 +100,10 @@ class AppSettings {
           json['showKeyboard'] as bool? ?? AppSettings.defaults.showKeyboard,
       soundEnabled:
           json['soundEnabled'] as bool? ?? AppSettings.defaults.soundEnabled,
+      scaleRoot: json['scaleRoot'] as String? ?? AppSettings.defaults.scaleRoot,
+      scaleMode: json['scaleMode'] as String? ?? AppSettings.defaults.scaleMode,
+      scaleOrdered:
+          json['scaleOrdered'] as bool? ?? AppSettings.defaults.scaleOrdered,
     );
   }
 }

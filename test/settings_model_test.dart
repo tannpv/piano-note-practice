@@ -12,6 +12,7 @@ void main() {
       accidentalsEnabled: true,
       avoidRepeats: false,
       showKeyboard: false,
+      showFingerHints: true,
       soundEnabled: true,
     );
 

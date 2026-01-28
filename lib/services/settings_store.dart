@@ -15,6 +15,7 @@ class SettingsStore {
     final avoidRepeats = prefs.getBool('${_keyPrefix}avoidRepeats');
     final showKeyboard = prefs.getBool('${_keyPrefix}showKeyboard');
     final soundEnabled = prefs.getBool('${_keyPrefix}soundEnabled');
+    final showFingerHints = prefs.getBool('${_keyPrefix}showFingerHints');
 
     if (clefMode == null && rangePreset == null && displaySeconds == null) {
       return AppSettings.defaults;
@@ -28,6 +29,7 @@ class SettingsStore {
       'avoidRepeats': avoidRepeats,
       'showKeyboard': showKeyboard,
       'soundEnabled': soundEnabled,
+      'showFingerHints': showFingerHints,
     });
   }
 
@@ -41,5 +43,6 @@ class SettingsStore {
     await prefs.setBool('${_keyPrefix}avoidRepeats', settings.avoidRepeats);
     await prefs.setBool('${_keyPrefix}showKeyboard', settings.showKeyboard);
     await prefs.setBool('${_keyPrefix}soundEnabled', settings.soundEnabled);
+    await prefs.setBool('${_keyPrefix}showFingerHints', settings.showFingerHints);
   }
 }
